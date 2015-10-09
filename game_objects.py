@@ -2,7 +2,6 @@ class GameClock(object):
 
     '''game clock for football sim'''
 
-
     def __init__(self, quarters=4, q_len = 15):
 
         self.q = 1
@@ -40,3 +39,13 @@ class GameClock(object):
         secs = self.q_time%60
         return "Q"+str(self.q)+" "+str(mins).zfill(2)+":"+str(secs).zfill(2)
 
+class Game(object):
+
+    def __init__(self, away_team, home_team):
+        self.away_team = away_team
+        self.home_team = home_team
+        self.clock = GameClock()
+        self.score = (0,0)
+        self.winner = None
+        self.drives = []
+        self.kicking_team = None

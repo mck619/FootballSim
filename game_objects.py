@@ -48,4 +48,32 @@ class Game(object):
         self.score = (0,0)
         self.winner = None
         self.drives = []
-        self.kicking_team = None
+        self.kicking_off_team = None
+
+class Drive(object):
+
+    def __init__(self, offense, defense,starting_position):
+        self.offense = offense
+        self.defense = defense
+        self.yd_line = starting_position
+        self.result = None
+
+class KickOff(object):
+
+    def __init(self, kicking_team, recieving_team):
+        self.kicking_team = kicking_team
+        self.recieving_team = recieving_team
+        self.result = None
+
+    def kick(self):
+
+
+class Logger(object):
+    def start_log(self):
+
+    def close_log(self):
+
+    def write_log(self,line):
+
+    def read_log(self,name):
+

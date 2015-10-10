@@ -36,10 +36,13 @@ class GameClock(object):
 
         return self.game_over
 
-    def time(self):
+    def time_str(self):
         mins = int(self.q_time/60)
         secs = self.q_time%60
         return "Q"+str(self.q)+" "+str(mins).zfill(2)+":"+str(secs).zfill(2)
+
+    def time_secs(self):
+        return (self.q, self.q_time)
 
 class Game(object):
 
@@ -127,7 +130,74 @@ class Team(object):
 
 
 class Coach(object):
-    
+
+    def __init__(self, name, stats = {'agressiveness':0, 'run_tendancy':0}):
+
+        self.name = name
+        self.agressiveness = stats['aggressiveness']    #-5 to 5
+        self.run_tendancy = stats['run_tendancy']       #-5 to 5
+
+    def choose_play(dd, yd_line, side, clock, opponent):
+        '''
+
+        simple coach AI To choose a play based on field position and dd
+
+        :param dd: down and distance (down(int), distance(int))
+        :param yd_line: field position (int)
+        :param side: 'o' or 'd'
+        :param opponent: opponents team
+        :return: 1 of 4 offensive or 4 defensive plays
+        '''
+
+        if clock.time_sec[0] == (2 or 4) and clock.time_sec[1] < 120:
+            '''2 minute drill play calling'''
+
+        else:
+            if dd[0] == 1:
+            #default probability on 1st down:  1/3 run, 1/3 short pass, 1/3 long pass
+
+            if dd[0] == 2:
+                if dd[1] >= 15:
+                # .5 long pass .25 short pass .25 run
+
+                if 15 > dd[1] >= 10:
+                # .4 long pass .3 short pass .3 run
+
+                if 10 > dd[1] >= 5:
+                # 1/3 long pass 1/3 short pass 1/3 run
+
+                if 5 > dd[1] :
+                # 1/3 long pass 1/3 short pass 1/3 run
+
+            if dd[0] == 3:
+                if dd[1] >= 15:
+                # .7 long pass .15 run .15 short pass
+
+                if 15 > dd[1] >= 10:
+                # .6 long pass .2 run .2 short pass
+
+                if 10 > dd[1] >= 5:
+                # .15 long pass .75 short pass .1 run
+
+                if 5 > dd[1] >=3 :
+                # .15 long pass .65 short pass .2 run
+
+                if 3 > dd[1]:
+                # .05 long pass .475 run .475 short pass
+
+            if dd[0] == 4:
+
+                if dd[1] >= 15:
+
+                if 15 > dd[1] >= 10:
+
+                if 10 > dd[1] >= 5:
+
+                if 5 > dd[1] >= 3:
+
+                if 3 > dd[1]:
+
+
 
 class Drive(object):
 
@@ -166,10 +236,10 @@ class Logger(object):
 
 class Play(object):
 
-    def run_play(self, offense, defense, dd, yd_line, log):
+    def run_play(self, offense, defense, dd, yd_line, clock, log):
 
-        o_play = offense.choose_play(yd_line, 'o', dd)
-        d_play = defense.choose_play(yd_line, 'd', dd)
+        o_play = offense.choose_play(yd_line, 'o', dd, clock, defense)
+        d_play = defense.choose_play(yd_line, 'd', dd, clock, defense)
 
 
 

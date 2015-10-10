@@ -1,3 +1,5 @@
+import numpy
+
 class GameClock(object):
 
     '''game clock for football sim'''
@@ -48,24 +50,100 @@ class Game(object):
         self.score = (0,0)
         self.winner = None
         self.drives = []
-        self.kicking_off_team = None
+        self.log = Logger()
+
+    def play_game(self, name):
+
+        self.log.start_log(name)
+
+        p = Play()
+        k = KickOff()
+        d = Drive()
+
+        #coin toss
+
+        if numpy.random.randint(0,1) == 0:
+            offense = self.home_team
+            defense = self.away_team
+        else:
+            offense = self.away_team
+            defense = self.home_team
+
+        self.log.write_log(offense.get_name() + " has won the coin toss and elected to receive.")
+        (offense, defense, yd_line) = k.kick(defense, offense, self.log, self.clock, 35)
+
+        while not self.clock.game_over():
+
+            (result,yd_line) = d.play_drive(offense, defense, yd_line, self.clock, self.log)
+
+            if result == "Turnover":
+
+                offense, defense = defense, offense
+
+            else:
+
+                if result == "Touchdown":
+
+                    if offense is self.home_team:
+                        self.score[0] += 7
+                    else:
+                        self.score[1] += 7
+
+                if result == "Field Goal":
+
+                    if offense is self.home_team:
+                        self.score[0] += 3
+                    else:
+                        self.score[1] += 3
+
+                (offense, defense, yd_line) = kick(offense, defense, self.log, self.clock, 35)
+
+
+
+
+
+class Team(object):
+
+    def __init__(self, name, race, home_city, stats):
+        #self might be a dict of stats?
+        self.name = name
+        self.race = race
+        self.home_city = home_city
+        self.record = (0,0)
+        self.stats = stats
+
+    def hire_coach(self, coach):
+
+        self.coach = coach
+
+
+
+        '''needs stats'''
+
+    def get_name(self):
+
+        return self.name
+
+
+
+class Coach(object):
 
 class Drive(object):
 
-    def __init__(self, offense, defense,starting_position):
-        self.offense = offense
-        self.defense = defense
-        self.yd_line = starting_position
-        self.result = None
+    def play_drive(self, offense, defense, yd_line, log):
+        '''simulates the drive'''
+
+        return (self.result, yd_line)
+    
+
 
 class KickOff(object):
 
-    def __init(self, kicking_team, recieving_team):
-        self.kicking_team = kicking_team
-        self.recieving_team = recieving_team
-        self.result = None
 
-    def kick(self):
+    def kick(self, logger):
+
+        '''runs a kickoff returns a field position and the team who gained possession(in case of a turnover)'''
+
 
 
 class Logger(object):
@@ -76,4 +154,17 @@ class Logger(object):
     def write_log(self,line):
 
     def read_log(self,name):
+
+
+class Play(object):
+
+    def run_play(self, offense, defense, dd, yd_line, logger):
+        '''
+        :param offense: team object
+        :param defense: team object
+        :param dd: down and distance tuple
+        :param yd_line: field position
+        :return: tuple with (play result, dd, offensive team)
+        '''
+
 

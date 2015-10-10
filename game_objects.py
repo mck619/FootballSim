@@ -127,14 +127,22 @@ class Team(object):
 
 
 class Coach(object):
+    
 
 class Drive(object):
 
-    def play_drive(self, offense, defense, yd_line, log):
+    def play_drive(self, offense, defense, yd_line, clock, log):
         '''simulates the drive'''
+        p = Play()
+        while p.get_outcome[0] not in  {"Field Goal", "Touchdown", "Turnover", "End Half", "End Game"}:
+
+            (result, yd_line) = p.run_play(offense, defense, yd_line, clock, log)
+
+        return (result, yd_line)
+
 
         return (self.result, yd_line)
-    
+
 
 
 class KickOff(object):
@@ -158,13 +166,11 @@ class Logger(object):
 
 class Play(object):
 
-    def run_play(self, offense, defense, dd, yd_line, logger):
-        '''
-        :param offense: team object
-        :param defense: team object
-        :param dd: down and distance tuple
-        :param yd_line: field position
-        :return: tuple with (play result, dd, offensive team)
-        '''
+    def run_play(self, offense, defense, dd, yd_line, log):
+
+        o_play = offense.choose_play(yd_line, 'o', dd)
+        d_play = defense.choose_play(yd_line, 'd', dd)
+
+
 
 

@@ -1,8 +1,18 @@
 import numpy
+''' GameClock is finished '''
 
 class GameClock(object):
 
-    '''game clock for football sim'''
+    '''game clock for football sim
+    clock(quarters, q_len): initiates a game clock with specified number of quarters and the q_len minutes per quarter
+    run_clock(secs): runs secs # of seconds off the clock
+    start_quarter: resets game clock to beginning of quarter, increments quarter attribute
+                   sets end game to true if used during the last quarter
+    quarter_over: a bool function which returns true if the current quarter has ended
+    game_end: bool function which returns true if the game clock has expired
+    time_str: returns a pretty string which time and quarter specified
+    time_secs: returns a tuple of (quarter number (an int), and number of seconds remaining (an int)
+    '''
 
     def __init__(self, quarters=4, q_len = 15):
 
@@ -20,13 +30,18 @@ class GameClock(object):
         if self.q_time <= 0 :
             self.q_time = 0
             self.quarter_over = True
+            if self.q == self.quarters:
+                self.game_over = True
 
     def start_quarter(self):
 
+
+        if self.q == self.quarters:
+            self.game_over = True
+            raise Exception("Can't start a new quarter, the game is over! GG")
+
         self.q += 1
         self.q_time = self.q_len
-        if self.q == 5:
-            self.game_over = True
 
     def quarter_end(self):
 
@@ -99,7 +114,7 @@ class Game(object):
                     else:
                         self.score[1] += 3
 
-                (offense, defense, yd_line) = kick(offense, defense, self.log, self.clock, 35)
+                (offense, defense, yd_line) = k.kick(offense, defense, self.log, self.clock, 35)
 
 
 
@@ -131,11 +146,11 @@ class Team(object):
 
 class Coach(object):
 
-    def __init__(self, name, stats = {'agressiveness':0, 'run_tendancy':0}):
+    def __init__(self, name, stats = {'aggressiveness':0, 'run_tendency':0}):
 
         self.name = name
-        self.agressiveness = stats['aggressiveness']    #-5 to 5
-        self.run_tendancy = stats['run_tendancy']       #-5 to 5
+        self.aggressiveness = stats['aggressiveness']    #-5 to 5
+        self.run_tendency = stats['run_tendency']       #-5 to 5
 
     def choose_play(dd, yd_line, side, clock, opponent):
         '''
@@ -218,20 +233,20 @@ class Drive(object):
 class KickOff(object):
 
 
-    def kick(self, logger):
+    def kick(self, log):
 
         '''runs a kickoff returns a field position and the team who gained possession(in case of a turnover)'''
 
 
 
 class Logger(object):
-    def start_log(self):
-
+    def start_log(self, name):
+        self.log = open(name, 'w')
     def close_log(self):
-
+        self.log.close()
     def write_log(self,line):
-
-    def read_log(self,name):
+        self.log.write(line)
+    #def read_log(self,name):#
 
 
 class Play(object):
